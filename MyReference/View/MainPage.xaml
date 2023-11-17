@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:MyReference.ViewModel"
+             xmlns:model="clr-namespace:MyReference.Model"
+             x:DataType="viewmodel:MainViewModel"
+             x:Class="MyReference.MainPage"
+             x:Name="MyPage">
+
+    <ContentPage.MenuBarItems>
+        
+        <MenuBarItem Text="{Binding Moncode}" BindingContext="{Binding Path=BindingContext, Source={x:Reference MyPage}}">
+            <MenuFlyoutItem Text="{Binding MonTexte}" 
+                            Command="{x:Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToDetailPageCommand}"
+                            CommandParameter="From Menu1!"/>
+        </MenuBarItem>
+        
+        <MenuBarItem Text="Menu" BindingContext="{Binding Path=BindingContext, Source={x:Reference MyPage}}">
+            <MenuFlyoutSubItem Text="Menu 1-1">
+                <MenuFlyoutItem Text="Menu 1-1-1"
+                                Command="{x:Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToDetailPageCommand}"
+                                CommandParameter="From Menu 1-1-1!"/>
+                </MenuFlyoutSubItem>
+            <MenuFlyoutItem Text="Menu 1-2"
+                            Command="{x:Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToDetailPageCommand}"
+                            CommandParameter="From Menu 1-2!"/>
+        </MenuBarItem>
+
+
+        <MenuBarItem Text="About" BindingContext="{Binding Path=BindingContext, Source={x:Reference MyPage}}">
+            <MenuFlyoutItem Text="About us !" 
+                            Command="{x:Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToAboutPageCommand}"
+                            CommandParameter="From Menu1!"/>
+        </MenuBarItem>
+
+    </ContentPage.MenuBarItems>
+
+    <ScrollView>
+        <Grid Padding="10" RowSpacing="10" ColumnDefinitions="1200  ,*" RowDefinitions="Auto,*" BackgroundColor="Transparent">
+            <Button Text="Add Cars from JSON file" 
+                Grid.Row="0" 
+                Grid.Column="0"
+                HeightRequest="60"
+                WidthRequest="1190"
+                HorizontalOptions="Start"
+                Command="{Binding MonkeysFromJSONCommand}"
+                IsEnabled="{Binding IsNotBusy}" />
+
+            <CollectionView ItemsSource="{Binding MyShownList}" Grid.Row="1">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Monkey">
+                        <Frame Margin="10" CornerRadius="10" HasShadow="True">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Image Grid.Row="0" Aspect="AspectFill" Source="{Binding Image}" HeightRequest="300" WidthRequest="800" />
+                                <StackLayout Grid.Row="1" Margin="10,5" Orientation="Horizontal">
+                                    <Label Text="{Binding Title}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
+                                    <Label Text="{Binding StartProduction, StringFormat='Year : {0}'}" FontSize="16" VerticalOptions="Center" Margin="10,0,0,0" />
+                                    <Button Text="Details" Command="{x:Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToDetailPageCommand}" BackgroundColor="Blue" TextColor="White" VerticalOptions="Center" Margin="10,0,0,0" ImageSource="details.png" />
+                                    <Button Text="Buy" Command="{x:Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToDetailPageCommand}" BackgroundColor="Green" TextColor="White" VerticalOptions="Center" ImageSource="buy.png" />
+                                </StackLayout>
+                            </Grid>
+
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"
+                           Grid.RowSpan="2"
+                           Grid.ColumnSpan="2"/>
+        </Grid>
+    </ScrollView>
+</ContentPage>
